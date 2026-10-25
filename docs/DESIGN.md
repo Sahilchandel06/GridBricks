@@ -1,47 +1,38 @@
-# Design direction
+# GridBricks editorial UI specification
 
 ## Product goal
 
-Make it easy for a day-ahead buyer to see the forecast information available at decision time and judge its historical accuracy.
+Make the day-ahead wind forecast and its historical accuracy easy to read for energy traders. The data, charts, dates, and units are the product; the interface should support them quietly.
 
-## Proposed visual direction
+## Visual direction
 
-This section records design guidance from the supplied implementation prompt; the official PDF specifies the two user needs but does not prescribe visual styling.
+- Use a light-first editorial style: off-white page (`#FAFAF8`), white surface, near-black text (`#111111`), secondary text (`#5C5C57`), and subtle borders (`#E5E4DF`).
+- Use one accent only: deep teal (`#0F766E`). In dark mode, use a restrained lighter teal and neutral near-black surfaces.
+- Self-host IBM Plex Sans Variable. Use four type sizes only: 12, 14, 20, and 32px. Use tabular numerals for data and monospace only for timestamps.
+- Define colors, the shared 6px radius, spacing values (4, 8, 16, 24, 32, 48, 64px), typography, and chart colors as CSS variables and expose them through the Tailwind theme.
+- Use a 1px border or divider instead of a shadow. Do not add gradients, glow, blur, glass effects, decorative art, or animation. Color and opacity transitions may last 150ms; reduced-motion preferences must be respected.
+- Keep all text left-aligned. Use the shared radius consistently. Keep the mobile layout free of horizontal page overflow; wide tables scroll inside their own container.
 
-- Dark-first analytical workspace with a restrained light theme.
-- Use cyan for forecast series, amber for actual generation, and a translucent forecast-colored uncertainty band.
-- Use one sans-serif family, tabular numerals for values, and monospace for timestamps.
-- Keep navigation compact and devote most space to readable charts and their units.
-- Use minimal chart gridlines, visible keyboard focus, reduced-motion support, and responsive layouts.
-- Avoid decorative gradients, glass effects, oversized hero sections, and emoji icons.
+## Layout and content
 
-## Interaction principles
+- Keep the three views: Decision, Accuracy, and Method.
+- Use a slim left navigation with text links, 16px Lucide icons, and an accent-colored 2px active rule. Collapse it to a compact top bar below 768px.
+- Put each page title, one plain explanatory sentence, and its controls in one header row. Keep date and cutoff controls together in a bottom-ruled toolbar above the chart.
+- Present decision KPIs as one ruled row of four statistics. Use a 12px uppercase label, 32px value, and 14px unit. Do not put each statistic in its own card.
+- Let charts sit directly on the page surface. Forecast uses the accent, actual uses near-black, and the uncertainty band uses the accent at about 12% opacity. Use only light horizontal gridlines, 1.5px series lines, and neutral gray plus the accent for error plots.
+- Put one concise insight under each chart. Derive it from the currently displayed API data and state units explicitly.
+- Use plain sections, ruled rows, and definition lists. Do not nest cards or add filler copy, fake data, testimonials, avatars, or unnecessary banners.
 
-- Make forecast publication time and measurement units visible near the data.
-- Keep user controls close to the view they change.
-- Provide clear loading, no-data, and error feedback.
-- Explain analytic definitions and limits in the product.
+## Interaction and accessibility
 
-## P4 screenshot review
+- Keep the existing routes, API calls, analytics, data, and cutoff/date behavior unchanged.
+- The Decision chart tooltip is a small white, 1px bordered panel with 12px text. It reports delivery time, forecast, actual, forecast error, and uncertainty band in MW for the inspected hour. Support pointer and keyboard inspection.
+- Keep controls labeled, focus rings visible at 2px in the accent, and error and empty states explicit. Skeletons use neutral fills without shimmer.
+- Maintain WCAG AA text contrast. Charts must remain readable at 390px, and wide tables must scroll within their own region.
+- Use icons only when they help with navigation, theme selection, information, or external links. Do not use emoji.
 
-- At 1440px, the navigation rail, status bar, delivery controls, KPI row, and source/period cards fit without overlap. The open workspace leaves room for chart content in the next phase.
-- At 390px, navigation becomes a compact top row, date and cutoff controls remain side by side, KPI cards use two columns, and source/period cards stack vertically without horizontal overflow.
-- The first capture clipped the forecast-version caption and showed a low-contrast decorative ring. The caption was shortened and the ring removed; the final captures are in `docs/screenshots/`.
+## Review requirements
 
-## P5 screenshot review
-
-- At 1440px, the KPI summary, 24-hour chart, publication details, and data coverage fit in the analytical workspace. Forecast, actual, and historical error range use the documented cyan, amber, and translucent cyan mapping.
-- At 390px, controls stay side by side, KPIs form two columns, the chart and legend remain readable, and publication/coverage details stack with no horizontal overflow.
-- Playwright changed both delivery date and D-1 cutoff and confirmed the chart heading and cutoff summary update from the API. Final captures are `docs/screenshots/p5-desktop.png` and `docs/screenshots/p5-mobile.png`.
-
-## P6 screenshot review
-
-- At 1440px, the headline metrics, error histogram, hourly MAE chart, grouped tables, and metric definitions fit the workspace with a clear top-to-bottom reading order.
-- At 390px, the visualizations stack, metric cards use two columns, and breakdown tables show sample count, MAE, and P90 while hiding secondary columns. This keeps decision-relevant comparisons visible without sideways scrolling.
-- Playwright changed the cutoff and confirmed the displayed summary follows the selected D-1 time. Both viewport captures have no horizontal page overflow and are in `docs/screenshots/`.
-
-## P7 screenshot review
-
-- At 1440px, the method page presents the decision flow, source and coverage panels, metric formulas, interpretation, and limitations in a compact reading order.
-- At 390px, source and quality sections stack, the four process steps use two columns, metric definitions use two columns, and the limits panels stack without horizontal overflow.
-- Playwright captured the page from the combined Docker app at both required widths. See `docs/screenshots/p7-desktop.png` and `docs/screenshots/p7-mobile.png`.
+- Capture Decision, Accuracy, and Method at 1440px and 390px in light and dark themes.
+- Check that all charts and controls work and that no browser console errors or mobile page overflow occur.
+- Review for a single accent, the four allowed font sizes, the spacing scale, one radius, no gradients or shadows, and no decorative elements without a user purpose.

@@ -65,11 +65,12 @@ Last updated: 2026-10-25
 - P7 Playwright screenshots were captured from the Docker-hosted app at 1440px and 390px with no horizontal overflow: `docs/screenshots/p7-desktop.png` and `docs/screenshots/p7-mobile.png`.
 - P7 implementation committed as `5b3e836`; checkpoint docs committed separately.
 - P8 preparation drafted `docs/DEMO_SCRIPT.md` with a customer walkthrough and technical review script under the ten-minute total limit.
+- UI redesign is complete: Decision, Accuracy, and Method use a restrained, light-first editorial system with a single teal accent, plain KPI rows, shared toolbar/section/insight components, and data-led chart tooltips. API calls, route behavior, and analytics are unchanged.
+- Replaced the prior UI spec in `docs/DESIGN.md` and logged the visual direction in `docs/DECISIONS.md`. Added twelve Playwright screenshots at 1440px and 390px across all three pages in light and dark themes under `docs/screenshots/redesign/`.
+- Redesign verification: `npm run lint`, `npm run build`, and Docker frontend build pass. Playwright checked all three pages in both themes at desktop/mobile sizes; there were no page errors or horizontal overflow. Decision date/cutoff controls, Accuracy cutoff, chart tooltip, and keyboard inspection were also checked. No separate frontend test suite is configured.
 
 ## In progress
 
-- Frontend TypeScript-to-JavaScript migration is complete. JSX, API calls, routes, and UI behavior are unchanged; JavaScript lint and Vite production build replace the TypeScript build step.
-- Verified with `npm install`, frontend lint/build, Playwright checks for all three pages and their controls at 1440px/390px, pixel-identical comparisons with the P5/P6/P7 captures, and a Docker image build. No separate frontend test suite is configured.
 - P7 implementation complete. P8 demo/release preparation is underway; external publishing remains pending account access.
 
 ## Next (ordered)
@@ -86,6 +87,7 @@ Last updated: 2026-10-25
 - Deployment, public repo creation, YouTube upload, and form submission are external deliverables.
 - Vercel deployment is configured but not published; the available CLI is outdated and logged out.
 - JavaScript no longer provides TypeScript's compile-time checks; keep the shared API response shapes documented in `frontend/src/api/client.js` and rely on ESLint, frontend behavior checks, and the production build.
+- The redesign uses a light-first theme with an optional dark theme. Check both after changing shared tokens or adding page-level components; chart hover details can also be inspected with left/right arrow keys when the chart has focus.
 
 ## How to run now
 
