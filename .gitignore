@@ -2,6 +2,7 @@ docs/ASSIGNMENT.pdf
 /*.pdf
 .env
 node_modules/
+frontend/dist/
 __pycache__/
 **/__pycache__/
 *.py[cod]
