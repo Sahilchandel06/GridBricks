@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { ThemeContext } from './ThemeContext';
 const STORAGE_KEY = 'gridbricks-theme';
 function initialTheme() {
-    return localStorage.getItem(STORAGE_KEY) === 'light' ? 'light' : 'dark';
+    return localStorage.getItem(STORAGE_KEY) === 'dark' ? 'dark' : 'light';
 }
 export function ThemeProvider({ children }) {
     const [theme, setTheme] = useState(initialTheme);
