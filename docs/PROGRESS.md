@@ -7,9 +7,9 @@ Last updated: 2026-10-25
 | PDF requirement or deliverable | Phase | Status |
 | --- | --- | --- |
 | Product context: UK utility buying in the day-ahead market; decisions made one day before delivery | P0 | Pending implementation |
-| Show latest renewable forecast available when buying decisions are made | P2–P5 | Pending |
-| Quantitatively evaluate renewable forecast accuracy to inform decisions | P2, P4–P6 | Pending |
-| National-level wind actuals and forecasts from Elexon alone | P0–P2 | Pending |
+| Show latest renewable forecast available when buying decisions are made | P2–P5 | In progress: selection logic complete; decision UI pending |
+| Quantitatively evaluate renewable forecast accuracy to inform decisions | P2, P4–P6 | In progress: metrics complete; accuracy UI pending |
+| National-level wind actuals and forecasts from Elexon alone | P0–P2 | Pass: Elexon-only national datasets |
 | FUELHH actuals filtered to `fuelType == WIND`, with `startTime` and `generation` | P0–P1 | Pass: 1,488 rows, no half-hour gaps |
 | WINDFOR forecasts using `startTime`, `publishTime`, and `generation` | P0–P1 | Pass: 17,864 rows, 744 target hours covered |
 | Only data relevant to January 2026 purchase decisions | P0–P2 | Pass: retained target times restricted to Jan 2026 |
@@ -34,6 +34,10 @@ Last updated: 2026-10-25
 - P1 tests pass: 8 tests.
 - P1 committed as `a4d1441`; generated Python bytecode was removed and ignore rules fixed in `6fd24f3`.
 - Ruff lint passes for the P1 ingestion module and tests.
+- P2 decision-time selection and accuracy analytics are implemented in `backend/analytics/analytics.py`.
+- P2 covers UK local cutoff/DST behavior, hourly-to-half-hourly alignment, cutoff gaps, summary metrics, horizon/hour/wind-level breakdowns, error histogram, uncertainty bands, and the historical buffer.
+- Generated `data/analytics.json`: 744/744 hourly decisions matched at D-1 09:00 Europe/London; MAE 2,142.1 MW, RMSE 2,611.7 MW, bias +1,851.9 MW, P90 absolute error 4,300.2 MW.
+- P2 tests pass: 16 tests across ingestion and analytics; Ruff passes.
 
 ## In progress
 
@@ -41,21 +45,21 @@ Last updated: 2026-10-25
 
 ## Next (ordered)
 
-1. Implement P2 analytics with strict cutoff selection and tests for gaps and timezones.
-2. Align hourly WINDFOR with half-hour FUELHH explicitly for accuracy analysis.
-3. Address neutral-identity phase commits when repository metadata is writable.
+1. Implement P3 FastAPI endpoints over the committed data and analysis.
+2. Build the React frontend foundation and typed API client.
+3. Connect the decision and accuracy views to the verified API.
 
 ## Known issues
 
 - The prompt's richer feature list and visual specifications exceed the official PDF; resolve scope in favor of the PDF where they conflict.
-- P1 reports whether any forecast exists for each target hour, but does not assess whether a forecast version was available at each decision cutoff; P2 must measure that.
-- WINDFOR timestamps are hourly while FUELHH timestamps are half-hourly; P2 must state and test how to align them for comparison.
+- Forecast accuracy represents one month and the D-1 09:00 default; other cutoffs can produce different results.
+- The symmetric P90 absolute-error buffer does not model asymmetric market costs or demand.
 - Deployment, public repo creation, YouTube upload, and form submission are external deliverables.
-- No feature code exists yet.
+- Product views, API, and Docker setup are not implemented yet.
 
 ## How to run now
 
-Run the ingestion script with `python -m backend.ingest.ingest`. Run ingestion tests with `python -m pytest backend/tests -q`.
+Run ingestion with `python -m backend.ingest.ingest`. Generate analytics with `python -m backend.analytics.analytics`. Run tests with `python -m pytest backend/tests -q` and lint with `ruff check backend`.
 
 ## Env needed
 

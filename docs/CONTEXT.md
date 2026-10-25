@@ -15,6 +15,9 @@ Build a first-version React frontend and Python backend for a UK utility’s day
 - A live January 1 FUELHH request returned 48 half-hour rows. A live WINDFOR request returned hourly `startTime` points. Preserve the native resolutions during ingestion; any alignment belongs in analytics and must be explicit.
 - `FUELHH/stream` cannot combine settlement date filters with publish date filters, per the OpenAPI description. The stream operation has no pagination parameters or stated result limit in the spec.
 - Data is stored in UTC. Jan 2026 itself has no UK DST transition; dates outside that month must not be used to infer January half-hour counts.
+- P2 analysis aligns each hourly WINDFOR point with the arithmetic mean of its two FUELHH half-hours. It selects the latest forecast publication at or before the previous delivery day’s Europe/London cutoff, then leaves unavailable matches as null.
+- P2’s default cutoff is 09:00 Europe/London. For a configurable cutoff in a repeated fall-back hour, choose the later occurrence; reject a nonexistent spring-forward wall time.
+- P2 empirical error uses `forecast - actual`; intervals for actual generation therefore invert error quantiles: `forecast - P90(error)` through `forecast - P10(error)`.
 
 ## Deployment direction
 
