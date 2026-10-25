@@ -31,11 +31,13 @@ Last updated: 2026-10-25
 - Verified the exact Elexon stream filters and response structures in the official OpenAPI spec and a live API sample.
 - P1 ingestion: added daily requests with retry, UTC normalization, filtering, deduplication, sorting, compact JSON outputs, and a coverage report.
 - Fetched and committed-data-ready outputs: `data/actuals.json`, `data/forecasts.json`, and `data/data-quality.json`.
-- P1 tests pass: 5 tests.
+- P1 tests pass: 8 tests.
+- P1 committed as `a4d1441`; generated Python bytecode was removed and ignore rules fixed in `6fd24f3`.
+- Ruff lint passes for the P1 ingestion module and tests.
 
 ## In progress
 
-- Git commit remains blocked by repository metadata access/ownership constraints in this environment.
+- No phase is currently in progress.
 
 ## Next (ordered)
 
@@ -46,7 +48,8 @@ Last updated: 2026-10-25
 ## Known issues
 
 - The prompt's richer feature list and visual specifications exceed the official PDF; resolve scope in favor of the PDF where they conflict.
-- P1 reports complete timestamp coverage per source, but does not assess whether a forecast version was available at each decision cutoff; P2 must measure that.
+- P1 reports whether any forecast exists for each target hour, but does not assess whether a forecast version was available at each decision cutoff; P2 must measure that.
+- WINDFOR timestamps are hourly while FUELHH timestamps are half-hourly; P2 must state and test how to align them for comparison.
 - Deployment, public repo creation, YouTube upload, and form submission are external deliverables.
 - No feature code exists yet.
 

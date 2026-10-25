@@ -1,13 +1,12 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from io import BytesIO
-from urllib.parse import parse_qs, urlparse
 from urllib.error import URLError
+from urllib.parse import parse_qs, urlparse
 
 import pytest
 
 import backend.ingest.ingest as ingestion
 from backend.ingest.ingest import (
-    IngestionError,
     build_quality_report,
     clean_actuals,
     clean_forecasts,
@@ -18,7 +17,7 @@ from backend.ingest.ingest import (
 
 
 def test_parse_utc_normalizes_offsets():
-    assert parse_utc("2026-01-01T01:00:00+01:00") == datetime(2026, 1, 1, tzinfo=timezone.utc)
+    assert parse_utc("2026-01-01T01:00:00+01:00") == datetime(2026, 1, 1, tzinfo=UTC)
 
 
 def test_parse_utc_requires_timezone():

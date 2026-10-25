@@ -4,17 +4,21 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import sys
 import time
 from collections import Counter
-from datetime import date, datetime, time as dt_time, timedelta, timezone
+from collections.abc import Callable, Iterable
+from datetime import UTC as DATETIME_UTC
+from datetime import date, datetime, timedelta
+from datetime import time as dt_time
 from pathlib import Path
-from typing import Any, Callable, Iterable
+from typing import Any
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
-UTC = timezone.utc
+UTC = DATETIME_UTC
 API_ROOT = "https://data.elexon.co.uk/bmrs/api/v1"
 DATA_DIR = Path(__file__).resolve().parents[2] / "data"
 DELIVERY_START = date(2026, 1, 1)
@@ -32,7 +36,7 @@ class IngestionError(RuntimeError):
 def parse_utc(value: str) -> datetime:
     """Parse an ISO timestamp with an explicit UTC offset and return UTC."""
     if not isinstance(value, str):
-        raise ValueError("timestamp must be a string")
+        raise TypeError("timestamp must be a string")
     candidate = value[:-1] + "+00:00" if value.endswith("Z") else value
     parsed = datetime.fromisoformat(candidate)
     if parsed.tzinfo is None:
@@ -116,9 +120,9 @@ def fetch_forecasts(
 
 def _number(value: Any, field: str) -> float | int:
     if isinstance(value, bool):
-        raise ValueError(f"{field} must be numeric")
+        raise TypeError(f"{field} must be numeric")
     number = float(value)
-    if number != number or number in (float("inf"), float("-inf")):
+    if not math.isfinite(number):
         raise ValueError(f"{field} must be finite")
     return int(number) if number.is_integer() else number
 
@@ -141,7 +145,7 @@ def clean_actuals(rows: Iterable[dict[str, Any]]) -> tuple[list[dict[str, Any]],
             }
             if "publishTime" in row:
                 cleaned["publishTime"] = iso_utc(parse_utc(row["publishTime"]))
-        except (KeyError, TypeError, ValueError) as exc:
+        except (KeyError, TypeError, ValueError):
             counters["invalid_rows"] += 1
             continue
         key = cleaned["startTime"]
