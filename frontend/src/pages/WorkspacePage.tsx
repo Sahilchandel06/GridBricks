@@ -1,4 +1,4 @@
-import { Activity, Check, Database, Info, Wind } from 'lucide-react'
+import { Activity, AlertTriangle, Check, Clock3, Info, Wind } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 import { api } from '../api/client'
@@ -7,6 +7,7 @@ import { DatePicker } from '../components/ui/DatePicker'
 import { KpiCard } from '../components/ui/KpiCard'
 import { Select } from '../components/ui/Select'
 import { Tooltip } from '../components/ui/Tooltip'
+import { DecisionChart } from './DecisionChart'
 
 const cutoffOptions = [
   { value: '08:00', label: '08:00' },
@@ -14,21 +15,34 @@ const cutoffOptions = [
   { value: '10:00', label: '10:00' },
 ]
 
-const numberFormat = new Intl.NumberFormat('en-GB')
+const numberFormat = new Intl.NumberFormat('en-GB', { maximumFractionDigits: 0 })
+const dateFormat = new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric', timeZone: 'Europe/London' })
+const timestampFormat = new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/London', timeZoneName: 'short' })
+
+function formatMw(value: number | null | undefined) {
+  return value == null ? '—' : numberFormat.format(value)
+}
 
 export function WorkspacePage() {
   const [deliveryDate, setDeliveryDate] = useState('2026-01-15')
   const [cutoff, setCutoff] = useState('09:00')
-  const meta = useQuery({ queryKey: ['meta'], queryFn: ({ signal }) => api.getMeta(signal) })
-  const quality = meta.data?.dataQuality
+  const decision = useQuery({
+    queryKey: ['decision', deliveryDate, cutoff],
+    queryFn: ({ signal }) => api.getDecision(deliveryDate, cutoff, signal),
+    enabled: Boolean(deliveryDate),
+  })
+  const data = decision.data
+  const latestPublish = data?.publishTimesUsed.reduce<string | null>((latest, value) => latest == null || value > latest ? value : latest, null) ?? null
+  const coverage = data ? `${data.matchedHours} / ${data.expectedHours}` : '—'
+  const formattedDate = deliveryDate ? dateFormat.format(new Date(`${deliveryDate}T12:00:00Z`)) : 'Select a delivery day'
 
   return (
-    <div className="workspace-page">
+    <div className="workspace-page decision-page">
       <div className="page-heading">
         <div>
-          <p className="eyebrow page-heading__eyebrow"><span className="eyebrow-marker" />DECISION WORKSPACE <span className="eyebrow-separator">/</span> NATIONAL WIND</p>
+          <p className="eyebrow page-heading__eyebrow"><span className="eyebrow-marker" />DAY-AHEAD DECISION <span className="eyebrow-separator">/</span> NATIONAL WIND</p>
           <h1>Wind generation</h1>
-          <p className="page-heading__description">Decision-time forecast and actual generation for the GB system.</p>
+          <p className="page-heading__description">Forecast information available to the buyer before the delivery day.</p>
         </div>
         <div className="page-controls">
           <DatePicker
@@ -49,94 +63,78 @@ export function WorkspacePage() {
         </div>
       </div>
 
-      {meta.isError && (
+      {decision.isError && (
         <div className="inline-alert" role="alert">
-          <Info aria-hidden="true" className="h-4 w-4" />
-          <span>Data service is unavailable. Start the FastAPI app to load the January archive.</span>
-          <button className="text-button" onClick={() => void meta.refetch()} type="button">Retry</button>
+          <AlertTriangle aria-hidden="true" className="h-4 w-4" />
+          <span>{decision.error.message || 'The decision data could not be loaded.'}</span>
+          <button className="text-button" onClick={() => void decision.refetch()} type="button">Retry</button>
         </div>
       )}
 
-      <div className="kpi-grid">
-        <KpiCard
-          caption="FUELHH · WIND · 30 minute resolution"
-          label="ACTUAL HALF-HOURS"
-          loading={meta.isPending}
-          unit="rows"
-          value={quality ? numberFormat.format(quality.actualRows) : '—'}
-        />
-        <KpiCard
-          caption="All 744 January target hours covered"
-          label="FORECAST COVERAGE"
-          loading={meta.isPending}
-          unit="hours"
-          value={quality ? `${numberFormat.format(quality.coveredTargetHours)} / 744` : '—'}
-        />
-        <KpiCard
-          caption="Forecast issues by target hour"
-          label="FORECAST VERSIONS"
-          loading={meta.isPending}
-          unit="issues"
-          value={quality ? numberFormat.format(quality.forecastRows) : '—'}
-        />
-        <KpiCard
-          caption={quality?.missingHalfHours === 0 ? 'Complete for all January delivery periods' : 'Intervals without an actual reading'}
-          label="ACTUAL DATA GAPS"
-          loading={meta.isPending}
-          unit="periods"
-          value={quality ? numberFormat.format(quality.missingHalfHours) : '—'}
-        />
-      </div>
+      {decision.isPending ? (
+        <div aria-label="Loading delivery-day wind forecast" className="decision-loading">
+          <div className="decision-loading__chart" />
+          <div className="decision-loading__row"><span /><span /><span /><span /></div>
+        </div>
+      ) : data ? (
+        <>
+          <div className="kpi-grid decision-kpis">
+            <KpiCard caption="Selected forecast issue" label="FORECAST PEAK" loading={false} unit="MW" value={formatMw(data.kpis.forecastPeakMw)} />
+            <KpiCard caption="Mean across 24 delivery hours" label="AVERAGE FORECAST" loading={false} unit="MW" value={formatMw(data.kpis.meanForecastMw)} />
+            <KpiCard caption="P90 absolute error · historical" label="RECOMMENDED BUFFER" loading={false} unit="MW" value={formatMw(data.kpis.recommendedBufferMw)} />
+            <KpiCard caption="Forecast and actual both available" label="HOURLY COVERAGE" loading={false} unit="hours" value={coverage} />
+          </div>
 
-      <div className="foundation-grid">
-        <Card className="source-card" eyebrow="DATA SOURCES" title="A single national view">
-          <p className="card-copy">Both series come from Elexon BMRS. Forecasts are selected by publication time, while actuals preserve their reported settlement periods.</p>
-          <div className="source-list">
-            <div className="source-row">
-              <span className="source-row__icon source-row__icon--actual"><Activity aria-hidden="true" className="h-4 w-4" /></span>
-              <div className="source-row__copy">
-                <span className="source-row__title">FUELHH <span>·</span> actual wind</span>
-                <span className="source-row__detail">30 minute average · MW</span>
-              </div>
-              <span className="source-row__status"><Check aria-hidden="true" className="h-3.5 w-3.5" />{meta.isSuccess ? 'READY' : 'LOADING'}</span>
+          <Card
+            action={<div className="chart-legend"><span><i className="chart-legend__swatch chart-legend__swatch--forecast" />Forecast</span><span><i className="chart-legend__swatch chart-legend__swatch--actual" />Actual</span><span><i className="chart-legend__band" />P10–P90 error band</span></div>}
+            className="decision-chart-card"
+            eyebrow="HOURLY GENERATION"
+            title={`${formattedDate} · MW`}
+          >
+            <DecisionChart points={data.points} />
+            <div className="chart-caption">
+              <span>Hourly target time · Europe/London</span>
+              <span>Band reflects historical forecast error</span>
             </div>
-            <div className="source-row">
-              <span className="source-row__icon source-row__icon--forecast"><Wind aria-hidden="true" className="h-4 w-4" /></span>
-              <div className="source-row__copy">
-                <span className="source-row__title">WINDFOR <span>·</span> wind forecast</span>
-                <span className="source-row__detail">Hourly target time · MW</span>
+          </Card>
+
+          <div className="decision-detail-grid">
+            <Card className="decision-issue-card" eyebrow="FORECAST AVAILABLE AT DECISION TIME" title="Publication details">
+              <div className="issue-summary">
+                <span className="issue-summary__icon"><Clock3 aria-hidden="true" className="h-4 w-4" /></span>
+                <div>
+                  <span className="issue-summary__label">LATEST ISSUE USED</span>
+                  <strong>{latestPublish ? timestampFormat.format(new Date(latestPublish)) : 'No forecast issue available'}</strong>
+                </div>
               </div>
-              <span className="source-row__status"><Check aria-hidden="true" className="h-3.5 w-3.5" />{meta.isSuccess ? 'READY' : 'LOADING'}</span>
-            </div>
-          </div>
-          <div className="source-card__footnote">
-            <Database aria-hidden="true" className="h-3.5 w-3.5" />
-            <span>Processed archive · UTC stored · London displayed</span>
-            <Tooltip content="The chart will align hourly forecasts with paired half-hour actuals using their mean MW value.">
-              <button aria-label="About source resolution" className="help-button" type="button"><Info aria-hidden="true" className="h-3.5 w-3.5" /></button>
-            </Tooltip>
-          </div>
-        </Card>
+              <div className="detail-list">
+                <div><span>Decision cutoff</span><strong>{data.cutoffLocal} Europe/London, previous day</strong></div>
+                <div><span>Forecast publications used</span><strong>{data.publishTimesUsed.length}</strong></div>
+                <div><span>Matched delivery hours</span><strong>{data.matchedHours} of {data.expectedHours}</strong></div>
+              </div>
+              <div className="issue-note"><Info aria-hidden="true" className="h-4 w-4" /><span>Only forecast issues published at or before the selected cutoff are included.</span>
+                <Tooltip content="The buffer is the historical 90th percentile of absolute forecast error. It is a planning reference, not a market-cost optimum.">
+                  <button aria-label="How to read the recommended buffer" className="help-button" type="button"><Info aria-hidden="true" className="h-4 w-4" /></button>
+                </Tooltip>
+              </div>
+            </Card>
 
-        <Card className="period-card" eyebrow="SELECTED DELIVERY DAY" title="January 2026">
-          <div className="period-card__date">
-            <span className="period-card__day">{deliveryDate.slice(-2)}</span>
-            <span className="period-card__month">JAN</span>
-            <span className="period-card__year">2026</span>
+            <Card className="decision-source-card" eyebrow="DATA COVERAGE" title="National wind archive">
+              <div className="coverage-status"><span className="coverage-status__mark"><Check aria-hidden="true" className="h-4 w-4" /></span><div><strong>{data.matchedHours === data.expectedHours ? 'Complete hourly match' : 'Partial hourly match'}</strong><span>{data.expectedHours} expected delivery hours</span></div></div>
+              <div className="source-row source-row--compact">
+                <span className="source-row__icon source-row__icon--actual"><Activity aria-hidden="true" className="h-4 w-4" /></span>
+                <div className="source-row__copy"><span className="source-row__title">FUELHH · actual wind</span><span className="source-row__detail">30-minute readings averaged to hourly MW</span></div>
+              </div>
+              <div className="source-row source-row--compact">
+                <span className="source-row__icon source-row__icon--forecast"><Wind aria-hidden="true" className="h-4 w-4" /></span>
+                <div className="source-row__copy"><span className="source-row__title">WINDFOR · day-ahead forecast</span><span className="source-row__detail">Hourly MW at publication time</span></div>
+              </div>
+            </Card>
           </div>
-          <div className="period-card__rule" />
-          <div className="period-card__cutoff">
-            <span className="period-card__cutoff-label">DECISION CUTOFF</span>
-            <span className="period-card__cutoff-value">{cutoff}<span> London · D-1</span></span>
-          </div>
-          <p className="period-card__note">Forecast availability is evaluated against this cutoff for every target hour.</p>
-        </Card>
-      </div>
 
-      <div className="workspace-footer">
-        <span><span aria-hidden="true" className="footer-check"><Check /></span>Source coverage checked</span>
-        <span>National level <span className="footer-dot">·</span> January 2026 only <span className="footer-dot">·</span> All values MW</span>
-      </div>
+          <div className="workspace-footer"><span><span aria-hidden="true" className="footer-check"><Check /></span>Decision-time selection applied</span><span>National level <span className="footer-dot">·</span> January 2026 only <span className="footer-dot">·</span> All values MW</span></div>
+        </>
+      ) : null}
     </div>
   )
 }
