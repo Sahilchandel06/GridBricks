@@ -42,7 +42,7 @@ Last updated: 2026-10-25
 - P3 includes Pydantic response models, January-only date validation, cutoff validation, structured errors, configured CORS, five-minute HTTP caching, and OpenAPI/Swagger routes.
 - Added `api/index.py` as the Vercel Python function entry point and backend runtime/development requirements.
 - P3 verification passes: 26 pytest tests across all phases, Ruff checks `backend` and `api`, and OpenAPI path/error schemas were inspected.
-- P3 committed as `NEXT_COMMIT`.
+- P3 committed as `66d74fe`.
 
 ## In progress
 
