@@ -1,6 +1,8 @@
-   docs/ASSIGNMENT.pdf
+docs/ASSIGNMENT.pdf
 /*.pdf
-   .env
-   node_modules/
-   __pycache__/
-   .venv/
+.env
+node_modules/
+__pycache__/
+**/__pycache__/
+*.py[cod]
+.venv/
