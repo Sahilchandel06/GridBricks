@@ -64,10 +64,11 @@ Last updated: 2026-10-25
 - P7 adds Vercel FastAPI framework/build configuration and explicit function inclusion for `data/**` and `frontend/dist/**`. The local CLI is 42.3.0, below Vercel's documented minimum 48.1.8 for current FastAPI CLI workflows, and is not authenticated, so a Vercel deployment could not be built or published from this session.
 - P7 Playwright screenshots were captured from the Docker-hosted app at 1440px and 390px with no horizontal overflow: `docs/screenshots/p7-desktop.png` and `docs/screenshots/p7-mobile.png`.
 - P7 implementation committed as `5b3e836`; checkpoint docs committed separately.
+- P8 preparation drafted `docs/DEMO_SCRIPT.md` with a customer walkthrough and technical review script under the ten-minute total limit.
 
 ## In progress
 
-- P7 implementation complete; deployment and submission deliverables remain.
+- P7 implementation complete. P8 demo/release preparation is underway; external publishing remains pending account access.
 
 ## Next (ordered)
 
@@ -79,7 +80,7 @@ Last updated: 2026-10-25
 - The prompt's richer feature list and visual specifications exceed the official PDF; resolve scope in favor of the PDF where they conflict.
 - Forecast accuracy represents one month and the D-1 09:00 default; other cutoffs can produce different results.
 - The symmetric P90 absolute-error buffer does not model asymmetric market costs or demand.
-- Vercel currently documents its Python runtime as Beta; P7 must verify build routing and data-file inclusion before relying on it.
+- Vercel's Python runtime is documented as Beta. Local Docker/API/static routing passed; Vercel deployment has not been run because this environment is unauthenticated and the available CLI is outdated.
 - Deployment, public repo creation, YouTube upload, and form submission are external deliverables.
 - Vercel deployment is configured but not published; the available CLI is outdated and logged out.
 

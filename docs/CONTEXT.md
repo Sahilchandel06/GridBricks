@@ -53,6 +53,7 @@ Proposed for evaluation: Vercel static frontend with Python serverless API funct
 | `frontend/src/pages/AccuracyPage.tsx` | Accuracy metrics and horizon/hour/wind-level breakdowns |
 | `frontend/src/pages/MethodPage.tsx` | Source coverage, analysis steps, metric definitions, and limitations |
 | `docs/screenshots/` | Reviewed desktop/mobile UI phase captures |
+| `docs/DEMO_SCRIPT.md` | Timed two-part customer/technical demo narration and recording checklist |
 | `data/` | Processed, committed January 2026 data |
 | `docs/` | Assignment, project memory, design, and progress records |
 | `Dockerfile` | Multi-stage frontend build and combined FastAPI runtime image |
