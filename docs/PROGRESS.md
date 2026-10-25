@@ -7,7 +7,7 @@ Last updated: 2026-10-25
 | PDF requirement or deliverable | Phase | Status |
 | --- | --- | --- |
 | Product context: UK utility buying in the day-ahead market; decisions made one day before delivery | P0 | Pending implementation |
-| Show latest renewable forecast available when buying decisions are made | P2–P5 | In progress: selection logic complete; decision UI pending |
+| Show latest renewable forecast available when buying decisions are made | P2–P5 | Pass: decision-time selector and daily view show the selected publication, forecast, actual, and uncertainty band |
 | Quantitatively evaluate renewable forecast accuracy to inform decisions | P2, P4–P6 | In progress: metrics complete; accuracy UI pending |
 | National-level wind actuals and forecasts from Elexon alone | P0–P2 | Pass: Elexon-only national datasets |
 | FUELHH actuals filtered to `fuelType == WIND`, with `startTime` and `generation` | P0–P1 | Pass: 1,488 rows, no half-hour gaps |
@@ -48,16 +48,20 @@ Last updated: 2026-10-25
 - P4 verified with ESLint and a production TypeScript/Vite build; both pass. Playwright screenshots were captured at 1440px and 390px and reviewed. The review led to shortening a clipped mobile KPI caption and removing a decorative ring from the delivery card.
 - P4 screenshots: `docs/screenshots/p4-desktop.png` and `docs/screenshots/p4-mobile.png`.
 - P4 frontend committed as `c05a127`; checkpoint docs committed separately.
+- P5 replaced the workspace scaffold with a date/cutoff-driven decision view bound to `/api/decision`.
+- P5 includes the hourly forecast/actual plot, historical error band, forecast peak, average, recommended buffer, hourly coverage, latest publication timestamp, and data-source details.
+- P5 lint and production build pass; backend verification remains green with 26 tests and Ruff. Playwright confirmed date and cutoff changes refetch the view, and screenshots at 1440px and 390px have no horizontal overflow.
+- P5 screenshots: `docs/screenshots/p5-desktop.png` and `docs/screenshots/p5-mobile.png`.
+- P5 feature committed as `c14beaa`; checkpoint docs committed separately.
 
 ## In progress
 
-- P4 complete; P5 decision view is next.
+- P5 complete; P6 accuracy view is next.
 
 ## Next (ordered)
 
-1. Implement the decision view and bind it to `/api/decision`.
-2. Implement the accuracy view and bind it to the analytics endpoints.
-3. Implement the method/source view, Docker setup, and deployment wiring.
+1. Implement the accuracy view and bind it to the analytics endpoints.
+2. Implement the method/source view, Docker setup, and deployment wiring.
 
 ## Known issues
 
@@ -66,7 +70,7 @@ Last updated: 2026-10-25
 - The symmetric P90 absolute-error buffer does not model asymmetric market costs or demand.
 - Vercel currently documents its Python runtime as Beta; P7 must verify build routing and data-file inclusion before relying on it.
 - Deployment, public repo creation, YouTube upload, and form submission are external deliverables.
-- Decision and accuracy product views and Docker setup are not implemented yet; the current workspace is the P4 foundation scaffold.
+- The accuracy view and Docker setup are not implemented yet.
 
 ## How to run now
 

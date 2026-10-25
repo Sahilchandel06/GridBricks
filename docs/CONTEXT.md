@@ -47,6 +47,7 @@ Proposed for evaluation: Vercel static frontend with Python serverless API funct
 | `frontend/` | React application |
 | `frontend/src/api/` | Typed client and response contracts for the FastAPI routes |
 | `frontend/src/components/` | App shell and shared UI primitives |
+| `frontend/src/pages/DecisionChart.tsx` | Responsive SVG plot for hourly actuals, decision-time forecasts, and historical error bands |
 | `docs/screenshots/` | Reviewed desktop/mobile UI phase captures |
 | `data/` | Processed, committed January 2026 data |
 | `docs/` | Assignment, project memory, design, and progress records |

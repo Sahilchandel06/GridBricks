@@ -27,3 +27,9 @@ This section records design guidance from the supplied implementation prompt; th
 - At 1440px, the navigation rail, status bar, delivery controls, KPI row, and source/period cards fit without overlap. The open workspace leaves room for chart content in the next phase.
 - At 390px, navigation becomes a compact top row, date and cutoff controls remain side by side, KPI cards use two columns, and source/period cards stack vertically without horizontal overflow.
 - The first capture clipped the forecast-version caption and showed a low-contrast decorative ring. The caption was shortened and the ring removed; the final captures are in `docs/screenshots/`.
+
+## P5 screenshot review
+
+- At 1440px, the KPI summary, 24-hour chart, publication details, and data coverage fit in the analytical workspace. Forecast, actual, and historical error range use the documented cyan, amber, and translucent cyan mapping.
+- At 390px, controls stay side by side, KPIs form two columns, the chart and legend remain readable, and publication/coverage details stack with no horizontal overflow.
+- Playwright changed both delivery date and D-1 cutoff and confirmed the chart heading and cutoff summary update from the API. Final captures are `docs/screenshots/p5-desktop.png` and `docs/screenshots/p5-mobile.png`.
