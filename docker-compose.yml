@@ -1,2 +1,8 @@
-# P0 skeleton only. Service definitions will be added when the app exists.
-services: {}
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    restart: unless-stopped

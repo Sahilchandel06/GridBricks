@@ -1,7 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { AppShell } from './components/AppShell'
 import { AccuracyPage } from './pages/AccuracyPage'
-import { SectionPlaceholder } from './pages/SectionPlaceholder'
+import { MethodPage } from './pages/MethodPage'
 import { WorkspacePage } from './pages/WorkspacePage'
 
 export default function App() {
@@ -11,7 +11,7 @@ export default function App() {
         <Route index element={<Navigate replace to="/decision" />} />
         <Route element={<WorkspacePage />} path="/decision" />
         <Route element={<AccuracyPage />} path="/accuracy" />
-        <Route element={<SectionPlaceholder section="method" />} path="/method" />
+        <Route element={<MethodPage />} path="/method" />
         <Route element={<Navigate replace to="/decision" />} path="*" />
       </Route>
     </Routes>

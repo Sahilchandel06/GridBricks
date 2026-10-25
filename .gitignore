@@ -3,6 +3,7 @@ docs/ASSIGNMENT.pdf
 .env
 node_modules/
 frontend/dist/
+.vercel/
 __pycache__/
 **/__pycache__/
 *.py[cod]

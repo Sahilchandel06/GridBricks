@@ -35,6 +35,7 @@ from backend.ingest.ingest import DELIVERY_END, DELIVERY_START, parse_utc
 logger = logging.getLogger("gridbricks.api")
 ROOT_DIR = Path(__file__).resolve().parents[2]
 DATA_DIR = Path(os.environ.get("GRIDBRICKS_DATA_DIR", ROOT_DIR / "data"))
+FRONTEND_DIR = Path(os.environ.get("GRIDBRICKS_FRONTEND_DIR", ROOT_DIR / "frontend" / "dist"))
 CACHE_CONTROL = "public, max-age=300, stale-while-revalidate=600"
 API_ERROR_RESPONSES = {
     422: {"model": ErrorEnvelope, "description": "Request validation failed."},
@@ -259,3 +260,7 @@ def get_accuracy_distribution(
         "matched": report["summary"]["matched"],
         "bins": report["errorDistribution"],
     }
+
+
+if FRONTEND_DIR.is_dir():
+    app.frontend("/", directory=FRONTEND_DIR, fallback="index.html")
