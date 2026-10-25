@@ -16,3 +16,4 @@
 - 2026-10-25 — Serve the built React SPA through FastAPI `app.frontend()` when the build directory exists. This preserves API route priority and gives BrowserRouter a server fallback; it requires FastAPI 0.138 or newer.
 - 2026-10-25 — Use one multi-stage Docker image for the Vite build and Python API runtime, and use that combined same-origin app for local Compose startup.
 - 2026-10-25 — Configure Vercel's FastAPI framework build with explicit inclusion of the committed data JSON and built frontend files; keep same-origin `/api/*` calls and avoid a separate frontend project.
+- 2026-10-25 — Frontend uses JavaScript instead of TypeScript, as requested, to simplify the frontend language/toolchain while preserving the existing React/Vite runtime behavior, API calls, and UI.

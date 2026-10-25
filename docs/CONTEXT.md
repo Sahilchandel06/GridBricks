@@ -46,12 +46,12 @@ Proposed for evaluation: Vercel static frontend with Python serverless API funct
 | `backend/analytics/` | Forecast selection and accuracy calculations |
 | `backend/tests/` | Backend tests |
 | `frontend/` | React application |
-| `frontend/src/api/` | Typed client and response contracts for the FastAPI routes |
+| `frontend/src/api/` | JavaScript API client with JSDoc response contracts for the FastAPI routes |
 | `frontend/src/components/` | App shell and shared UI primitives |
-| `frontend/src/pages/DecisionChart.tsx` | Responsive SVG plot for hourly actuals, decision-time forecasts, and historical error bands |
-| `frontend/src/pages/AccuracyCharts.tsx` | SVG error distribution and per-hour MAE charts |
-| `frontend/src/pages/AccuracyPage.tsx` | Accuracy metrics and horizon/hour/wind-level breakdowns |
-| `frontend/src/pages/MethodPage.tsx` | Source coverage, analysis steps, metric definitions, and limitations |
+| `frontend/src/pages/DecisionChart.jsx` | Responsive SVG plot for hourly actuals, decision-time forecasts, and historical error bands |
+| `frontend/src/pages/AccuracyCharts.jsx` | SVG error distribution and per-hour MAE charts |
+| `frontend/src/pages/AccuracyPage.jsx` | Accuracy metrics and horizon/hour/wind-level breakdowns |
+| `frontend/src/pages/MethodPage.jsx` | Source coverage, analysis steps, metric definitions, and limitations |
 | `docs/screenshots/` | Reviewed desktop/mobile UI phase captures |
 | `docs/DEMO_SCRIPT.md` | Timed two-part customer/technical demo narration and recording checklist |
 | `data/` | Processed, committed January 2026 data |

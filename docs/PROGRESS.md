@@ -68,11 +68,13 @@ Last updated: 2026-10-25
 
 ## In progress
 
+- Frontend TypeScript-to-JavaScript migration is complete. JSX, API calls, routes, and UI behavior are unchanged; JavaScript lint and Vite production build replace the TypeScript build step.
+- Verified with `npm install`, frontend lint/build, Playwright checks for all three pages and their controls at 1440px/390px, pixel-identical comparisons with the P5/P6/P7 captures, and a Docker image build. No separate frontend test suite is configured.
 - P7 implementation complete. P8 demo/release preparation is underway; external publishing remains pending account access.
 
 ## Next (ordered)
 
-1. Deploy to Vercel from an authenticated project and verify the live app/API.
+1. Deploy to Vercel from an authenticated project and verify the live app/API and responsive routes.
 2. Prepare the demo, public repository, and submission deliverables.
 
 ## Known issues
@@ -83,6 +85,7 @@ Last updated: 2026-10-25
 - Vercel's Python runtime is documented as Beta. Local Docker/API/static routing passed; Vercel deployment has not been run because this environment is unauthenticated and the available CLI is outdated.
 - Deployment, public repo creation, YouTube upload, and form submission are external deliverables.
 - Vercel deployment is configured but not published; the available CLI is outdated and logged out.
+- JavaScript no longer provides TypeScript's compile-time checks; keep the shared API response shapes documented in `frontend/src/api/client.js` and rely on ESLint, frontend behavior checks, and the production build.
 
 ## How to run now
 

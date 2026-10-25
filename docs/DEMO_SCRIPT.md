@@ -25,7 +25,7 @@ Target runtime: about 8 minutes total. Keep Part 1 under 5 minutes and Part 2 un
 ## Part 2 — Technical review (about 4:10)
 
 **0:00–0:35 — Architecture**  
-[Show the project tree.] The React, TypeScript, and Tailwind client uses a typed API client and React Query. FastAPI serves the metadata, daily decision, and accuracy endpoints. The January source archive is committed with the project, so deployed requests do not depend on Elexon being available.
+[Show the project tree.] The JavaScript React and Tailwind client uses a JSDoc-documented API client and React Query. FastAPI serves the metadata, daily decision, and accuracy endpoints. The January source archive is committed with the project, so deployed requests do not depend on Elexon being available.
 
 **0:35–1:20 — Ingestion and normalization**  
 [Show `backend/ingest/ingest.py` and the data directory.] Actuals come from FUELHH with `fuelType` set to WIND. Forecast issues come from WINDFOR and retain their publication timestamps. The ingestion code normalizes timestamps, filters the January delivery window, deduplicates, and writes compact source and quality files.

@@ -8,7 +8,7 @@ A day-ahead wind decision workspace for a UK utility. It shows the forecast avai
 - Accuracy view with MAE, RMSE, bias, MAPE, error distribution, and horizon/hour/wind-level breakdowns.
 - Method and source notes covering data alignment, error definitions, and limits.
 - FastAPI routes backed by the committed January source archive; the application does not call Elexon at request time.
-- Responsive React/Vite/TypeScript frontend and dark/light themes.
+- Responsive JavaScript React/Vite frontend and dark/light themes.
 
 ## Start with Docker
 
