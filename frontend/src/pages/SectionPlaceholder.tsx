@@ -1,11 +1,6 @@
-import { BarChart3, BookOpen } from 'lucide-react'
+import { BookOpen } from 'lucide-react'
 
 const copy = {
-  accuracy: {
-    title: 'Forecast accuracy',
-    description: 'A quantitative view of day-ahead forecast error across the January delivery window.',
-    icon: BarChart3,
-  },
   method: {
     title: 'Method & sources',
     description: 'Definitions, source coverage, and the assumptions behind the wind forecast analysis.',
@@ -13,7 +8,7 @@ const copy = {
   },
 }
 
-export function SectionPlaceholder({ section }: { section: keyof typeof copy }) {
+export function SectionPlaceholder({ section }: { section: 'method' }) {
   const { title, description, icon: Icon } = copy[section]
   return (
     <section className="section-placeholder">
