@@ -8,12 +8,12 @@ Last updated: 2026-10-25
 | --- | --- | --- |
 | Product context: UK utility buying in the day-ahead market; decisions made one day before delivery | P0 | Pending implementation |
 | Show latest renewable forecast available when buying decisions are made | P2–P5 | Pass: decision-time selector and daily view show the selected publication, forecast, actual, and uncertainty band |
-| Quantitatively evaluate renewable forecast accuracy to inform decisions | P2, P4–P6 | In progress: metrics complete; accuracy UI pending |
+| Quantitatively evaluate renewable forecast accuracy to inform decisions | P2, P4–P6 | Pass: January error metrics and breakdowns are exposed in the responsive accuracy view |
 | National-level wind actuals and forecasts from Elexon alone | P0–P2 | Pass: Elexon-only national datasets |
 | FUELHH actuals filtered to `fuelType == WIND`, with `startTime` and `generation` | P0–P1 | Pass: 1,488 rows, no half-hour gaps |
 | WINDFOR forecasts using `startTime`, `publishTime`, and `generation` | P0–P1 | Pass: 17,864 rows, 744 target hours covered |
 | Only data relevant to January 2026 purchase decisions | P0–P2 | Pass: retained target times restricted to Jan 2026 |
-| React frontend and Python backend | P0, P3–P6 | In progress: FastAPI API and frontend foundation complete; product views pending |
+| React frontend and Python backend | P0, P3–P6 | In progress: decision and accuracy views complete; method/source view pending |
 | Docker | P0, P7 | Pending |
 | Deploy sample app to Vercel or Heroku | P0, P7 | Pending |
 | Respect the 16-hour effort limit | All | In progress; scope must stay lean |
@@ -53,15 +53,20 @@ Last updated: 2026-10-25
 - P5 lint and production build pass; backend verification remains green with 26 tests and Ruff. Playwright confirmed date and cutoff changes refetch the view, and screenshots at 1440px and 390px have no horizontal overflow.
 - P5 screenshots: `docs/screenshots/p5-desktop.png` and `docs/screenshots/p5-mobile.png`.
 - P5 feature committed as `c14beaa`; checkpoint docs committed separately.
+- P6 replaced the accuracy placeholder with a live view of the summary, error distribution, per-hour errors, horizon groups, and low/mid/high wind-level groups.
+- P6 shows MAE, RMSE, signed bias, MAPE, normalized MAE, median absolute error, and the P90 buffer reference, with explicit MAPE threshold and error-sign definitions.
+- P6 lint and production build pass. Backend verification passes with 26 tests and Ruff. Playwright confirmed cutoff changes update the view and 1440px/390px layouts have no horizontal page overflow; mobile tables condense to the decision-relevant columns.
+- P6 screenshots: `docs/screenshots/p6-desktop.png` and `docs/screenshots/p6-mobile.png`.
+- P6 feature committed as `b5d5382`; checkpoint docs committed separately.
 
 ## In progress
 
-- P5 complete; P6 accuracy view is next.
+- P6 complete; P7 method/source view, Docker, and deployment wiring are next.
 
 ## Next (ordered)
 
-1. Implement the accuracy view and bind it to the analytics endpoints.
-2. Implement the method/source view, Docker setup, and deployment wiring.
+1. Implement the method/source view, Docker setup, and deployment wiring.
+2. Prepare the demo, README, public repository, and submission deliverables.
 
 ## Known issues
 
@@ -70,7 +75,7 @@ Last updated: 2026-10-25
 - The symmetric P90 absolute-error buffer does not model asymmetric market costs or demand.
 - Vercel currently documents its Python runtime as Beta; P7 must verify build routing and data-file inclusion before relying on it.
 - Deployment, public repo creation, YouTube upload, and form submission are external deliverables.
-- The accuracy view and Docker setup are not implemented yet.
+- The method/source view and Docker setup are not implemented yet.
 
 ## How to run now
 

@@ -33,3 +33,9 @@ This section records design guidance from the supplied implementation prompt; th
 - At 1440px, the KPI summary, 24-hour chart, publication details, and data coverage fit in the analytical workspace. Forecast, actual, and historical error range use the documented cyan, amber, and translucent cyan mapping.
 - At 390px, controls stay side by side, KPIs form two columns, the chart and legend remain readable, and publication/coverage details stack with no horizontal overflow.
 - Playwright changed both delivery date and D-1 cutoff and confirmed the chart heading and cutoff summary update from the API. Final captures are `docs/screenshots/p5-desktop.png` and `docs/screenshots/p5-mobile.png`.
+
+## P6 screenshot review
+
+- At 1440px, the headline metrics, error histogram, hourly MAE chart, grouped tables, and metric definitions fit the workspace with a clear top-to-bottom reading order.
+- At 390px, the visualizations stack, metric cards use two columns, and breakdown tables show sample count, MAE, and P90 while hiding secondary columns. This keeps decision-relevant comparisons visible without sideways scrolling.
+- Playwright changed the cutoff and confirmed the displayed summary follows the selected D-1 time. Both viewport captures have no horizontal page overflow and are in `docs/screenshots/`.
