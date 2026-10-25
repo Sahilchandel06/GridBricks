@@ -25,9 +25,10 @@ Proposed for evaluation: Vercel static frontend with Python serverless API funct
 
 ## API notes
 
-- FastAPI application: `backend/app/main.py`; Vercel serverless import: `api/index.py`.
+- FastAPI application: `backend/app/main.py`; Vercel entry point: `api/index.py`.
+- FastAPI serves the built Vite SPA with `app.frontend()` when `frontend/dist` exists; API path operations take priority and the SPA fallback supports direct page loads. Runtime requires FastAPI 0.138 or newer.
 - Root `requirements.txt` delegates to `backend/requirements.txt` so Vercel installs the Python runtime dependencies.
-- Vercel’s [Python runtime documentation](https://vercel.com/docs/functions/runtimes/python) recognizes an `app` ASGI application under `api/`; it currently labels the runtime Beta. P7 must verify routing and that the JSON data files are bundled.
+- Vercel’s [FastAPI integration](https://vercel.com/docs/frameworks/backend/fastapi) recognizes the application entry point; the [Python runtime](https://vercel.com/docs/functions/runtimes/python) is currently labeled Beta. `vercel.json` builds the Vite assets and explicitly includes `data/**` and `frontend/dist/**` in the function bundle.
 - `GET /api/meta` reports scope, units, resolutions, and source quality.
 - `GET /api/decision?date=YYYY-MM-DD&cutoff=HH:MM` returns one January delivery day; cutoff is local Europe/London on D-1, default 09:00.
 - Accuracy routes: `/api/accuracy/summary`, `/by-horizon`, `/by-hour`, `/by-wind-level`, and `/distribution`; each supports the same optional cutoff.
@@ -50,10 +51,13 @@ Proposed for evaluation: Vercel static frontend with Python serverless API funct
 | `frontend/src/pages/DecisionChart.tsx` | Responsive SVG plot for hourly actuals, decision-time forecasts, and historical error bands |
 | `frontend/src/pages/AccuracyCharts.tsx` | SVG error distribution and per-hour MAE charts |
 | `frontend/src/pages/AccuracyPage.tsx` | Accuracy metrics and horizon/hour/wind-level breakdowns |
+| `frontend/src/pages/MethodPage.tsx` | Source coverage, analysis steps, metric definitions, and limitations |
 | `docs/screenshots/` | Reviewed desktop/mobile UI phase captures |
 | `data/` | Processed, committed January 2026 data |
 | `docs/` | Assignment, project memory, design, and progress records |
+| `Dockerfile` | Multi-stage frontend build and combined FastAPI runtime image |
 | `docker-compose.yml` | Local full-stack startup |
+| `vercel.json` | Vercel FastAPI/Vite build and function file inclusion |
 
 ## Source of truth note
 

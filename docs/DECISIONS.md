@@ -13,3 +13,6 @@
 - 2026-10-25 — Define low/mid/high wind levels by terciles of matched actual generation in the January sample and horizon groups as 0–6, 6–12, 12–24, 24–48, and 48+ hours.
 - 2026-10-25 — Serve analytics from the committed JSON through FastAPI, cache computed reports per cutoff in-process and advertise a five-minute HTTP cache; this keeps deployed requests independent of Elexon.
 - 2026-10-25 — Restrict CORS to configured origins (local Vite origins by default) and return one structured error envelope for validation, request, and server failures.
+- 2026-10-25 — Serve the built React SPA through FastAPI `app.frontend()` when the build directory exists. This preserves API route priority and gives BrowserRouter a server fallback; it requires FastAPI 0.138 or newer.
+- 2026-10-25 — Use one multi-stage Docker image for the Vite build and Python API runtime, and use that combined same-origin app for local Compose startup.
+- 2026-10-25 — Configure Vercel's FastAPI framework build with explicit inclusion of the committed data JSON and built frontend files; keep same-origin `/api/*` calls and avoid a separate frontend project.

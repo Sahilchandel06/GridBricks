@@ -39,3 +39,9 @@ This section records design guidance from the supplied implementation prompt; th
 - At 1440px, the headline metrics, error histogram, hourly MAE chart, grouped tables, and metric definitions fit the workspace with a clear top-to-bottom reading order.
 - At 390px, the visualizations stack, metric cards use two columns, and breakdown tables show sample count, MAE, and P90 while hiding secondary columns. This keeps decision-relevant comparisons visible without sideways scrolling.
 - Playwright changed the cutoff and confirmed the displayed summary follows the selected D-1 time. Both viewport captures have no horizontal page overflow and are in `docs/screenshots/`.
+
+## P7 screenshot review
+
+- At 1440px, the method page presents the decision flow, source and coverage panels, metric formulas, interpretation, and limitations in a compact reading order.
+- At 390px, source and quality sections stack, the four process steps use two columns, metric definitions use two columns, and the limits panels stack without horizontal overflow.
+- Playwright captured the page from the combined Docker app at both required widths. See `docs/screenshots/p7-desktop.png` and `docs/screenshots/p7-mobile.png`.

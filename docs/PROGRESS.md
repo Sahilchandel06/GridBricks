@@ -13,9 +13,9 @@ Last updated: 2026-10-25
 | FUELHH actuals filtered to `fuelType == WIND`, with `startTime` and `generation` | P0–P1 | Pass: 1,488 rows, no half-hour gaps |
 | WINDFOR forecasts using `startTime`, `publishTime`, and `generation` | P0–P1 | Pass: 17,864 rows, 744 target hours covered |
 | Only data relevant to January 2026 purchase decisions | P0–P2 | Pass: retained target times restricted to Jan 2026 |
-| React frontend and Python backend | P0, P3–P6 | In progress: decision and accuracy views complete; method/source view pending |
-| Docker | P0, P7 | Pending |
-| Deploy sample app to Vercel or Heroku | P0, P7 | Pending |
+| React frontend and Python backend | P0, P3–P7 | Pass: decision, accuracy, and method/source views use the FastAPI backend |
+| Docker | P0, P7 | Pass: combined frontend/API image builds and runs through Compose |
+| Deploy sample app to Vercel or Heroku | P0, P7 | In progress: Vercel build wiring complete; deployment needs an authenticated Vercel project |
 | Respect the 16-hour effort limit | All | In progress; scope must stay lean |
 | Pitch/demo video: two parts, each overview no more than five minutes, total no more than ten minutes; unlisted YouTube | P7–P8 | Pending; external account action needed |
 | Public GitHub repo with anonymous/random repo name | P8 | Pending; external account action needed |
@@ -58,15 +58,21 @@ Last updated: 2026-10-25
 - P6 lint and production build pass. Backend verification passes with 26 tests and Ruff. Playwright confirmed cutoff changes update the view and 1440px/390px layouts have no horizontal page overflow; mobile tables condense to the decision-relevant columns.
 - P6 screenshots: `docs/screenshots/p6-desktop.png` and `docs/screenshots/p6-mobile.png`.
 - P6 feature committed as `b5d5382`; checkpoint docs committed separately.
+- P7 added a source/method page with the Elexon dataset links, analysis steps, archive coverage, formulas, interpretation guidance, and limitations.
+- P7 upgrades FastAPI to `>=0.138` and serves the built React SPA from the API process with client-side route fallback. Local API, root, and `/method` static routes return 200.
+- P7 adds a multi-stage Docker image and Compose service. `docker compose build` passed; the container reported healthy and served the SPA plus `/api/meta` successfully. The container was stopped after verification.
+- P7 adds Vercel FastAPI framework/build configuration and explicit function inclusion for `data/**` and `frontend/dist/**`. The local CLI is 42.3.0, below Vercel's documented minimum 48.1.8 for current FastAPI CLI workflows, and is not authenticated, so a Vercel deployment could not be built or published from this session.
+- P7 Playwright screenshots were captured from the Docker-hosted app at 1440px and 390px with no horizontal overflow: `docs/screenshots/p7-desktop.png` and `docs/screenshots/p7-mobile.png`.
+- P7 implementation committed as `5b3e836`; checkpoint docs committed separately.
 
 ## In progress
 
-- P6 complete; P7 method/source view, Docker, and deployment wiring are next.
+- P7 implementation complete; deployment and submission deliverables remain.
 
 ## Next (ordered)
 
-1. Implement the method/source view, Docker setup, and deployment wiring.
-2. Prepare the demo, README, public repository, and submission deliverables.
+1. Deploy to Vercel from an authenticated project and verify the live app/API.
+2. Prepare the demo, public repository, and submission deliverables.
 
 ## Known issues
 
@@ -75,7 +81,7 @@ Last updated: 2026-10-25
 - The symmetric P90 absolute-error buffer does not model asymmetric market costs or demand.
 - Vercel currently documents its Python runtime as Beta; P7 must verify build routing and data-file inclusion before relying on it.
 - Deployment, public repo creation, YouTube upload, and form submission are external deliverables.
-- The method/source view and Docker setup are not implemented yet.
+- Vercel deployment is configured but not published; the available CLI is outdated and logged out.
 
 ## How to run now
 
@@ -83,4 +89,4 @@ Install backend dependencies with `python -m pip install -r requirements.txt` an
 
 ## Env needed
 
-No environment variables are required. Public deployment will later require hosting and GitHub credentials, and a YouTube account for the required video deliverable.
+No environment variables are required for local startup. Vercel deployment requires an authenticated Vercel project. Public repo creation, unlisted video upload, and form submission remain external deliverables.
