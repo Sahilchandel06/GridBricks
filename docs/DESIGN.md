@@ -21,3 +21,9 @@ This section records design guidance from the supplied implementation prompt; th
 - Keep user controls close to the view they change.
 - Provide clear loading, no-data, and error feedback.
 - Explain analytic definitions and limits in the product.
+
+## P4 screenshot review
+
+- At 1440px, the navigation rail, status bar, delivery controls, KPI row, and source/period cards fit without overlap. The open workspace leaves room for chart content in the next phase.
+- At 390px, navigation becomes a compact top row, date and cutoff controls remain side by side, KPI cards use two columns, and source/period cards stack vertically without horizontal overflow.
+- The first capture clipped the forecast-version caption and showed a low-contrast decorative ring. The caption was shortened and the ring removed; the final captures are in `docs/screenshots/`.

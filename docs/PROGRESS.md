@@ -13,7 +13,7 @@ Last updated: 2026-10-25
 | FUELHH actuals filtered to `fuelType == WIND`, with `startTime` and `generation` | P0–P1 | Pass: 1,488 rows, no half-hour gaps |
 | WINDFOR forecasts using `startTime`, `publishTime`, and `generation` | P0–P1 | Pass: 17,864 rows, 744 target hours covered |
 | Only data relevant to January 2026 purchase decisions | P0–P2 | Pass: retained target times restricted to Jan 2026 |
-| React frontend and Python backend | P0, P3–P6 | In progress: FastAPI API complete; frontend pending |
+| React frontend and Python backend | P0, P3–P6 | In progress: FastAPI API and frontend foundation complete; product views pending |
 | Docker | P0, P7 | Pending |
 | Deploy sample app to Vercel or Heroku | P0, P7 | Pending |
 | Respect the 16-hour effort limit | All | In progress; scope must stay lean |
@@ -43,16 +43,21 @@ Last updated: 2026-10-25
 - Added `api/index.py` as the Vercel Python function entry point and backend runtime/development requirements.
 - P3 verification passes: 26 pytest tests across all phases, Ruff checks `backend` and `api`, and OpenAPI path/error schemas were inspected.
 - P3 committed as `66d74fe`.
+- P4 added the Vite, React, TypeScript, Tailwind, and React Query frontend foundation with typed API methods for every P3 endpoint.
+- P4 added the dark-first responsive app shell, stored light/dark theme toggle, shared Card/KPI/Select/DatePicker/Skeleton/Tooltip components, API connection status, and data coverage workspace scaffold.
+- P4 verified with ESLint and a production TypeScript/Vite build; both pass. Playwright screenshots were captured at 1440px and 390px and reviewed. The review led to shortening a clipped mobile KPI caption and removing a decorative ring from the delivery card.
+- P4 screenshots: `docs/screenshots/p4-desktop.png` and `docs/screenshots/p4-mobile.png`.
+- P4 frontend committed as `c05a127`; checkpoint docs committed separately.
 
 ## In progress
 
-- No phase is currently in progress.
+- P4 complete; P5 decision view is next.
 
 ## Next (ordered)
 
-1. Build P4 React/Vite/TypeScript/Tailwind foundation, shell, theme, and typed API client.
-2. Implement the decision view and bind it to `/api/decision`.
-3. Implement the accuracy view and bind it to the analytics endpoints.
+1. Implement the decision view and bind it to `/api/decision`.
+2. Implement the accuracy view and bind it to the analytics endpoints.
+3. Implement the method/source view, Docker setup, and deployment wiring.
 
 ## Known issues
 
@@ -61,11 +66,11 @@ Last updated: 2026-10-25
 - The symmetric P90 absolute-error buffer does not model asymmetric market costs or demand.
 - Vercel currently documents its Python runtime as Beta; P7 must verify build routing and data-file inclusion before relying on it.
 - Deployment, public repo creation, YouTube upload, and form submission are external deliverables.
-- Product views and Docker setup are not implemented yet.
+- Decision and accuracy product views and Docker setup are not implemented yet; the current workspace is the P4 foundation scaffold.
 
 ## How to run now
 
-Install backend dependencies with `python -m pip install -r requirements.txt`. Run the API locally with `uvicorn backend.app.main:app --reload`. Generate analytics with `python -m backend.analytics.analytics`. Run tests with `python -m pytest backend/tests -q` and lint with `ruff check backend api`.
+Install backend dependencies with `python -m pip install -r requirements.txt` and frontend dependencies with `cd frontend && npm install`. Run the API locally with `uvicorn backend.app.main:app --reload`, then run Vite in another terminal with `cd frontend && npm run dev`. Generate analytics with `python -m backend.analytics.analytics`. Run backend tests with `python -m pytest backend/tests -q`, Python lint with `ruff check backend api`, and frontend lint/build with `cd frontend && npm run lint` and `npm run build`.
 
 ## Env needed
 
