@@ -1,0 +1,38 @@
+# Project context
+
+## Condensed brief
+
+Build a first-version React frontend and Python backend for a UK utility’s day-ahead wind procurement decisions. Show forecast information available at decision time and quantify forecast accuracy. The official assignment limits the data to national wind generation actuals and forecasts from Elexon and to decisions in January 2026.
+
+## Verified Elexon API notes
+
+- Official developer portal: <https://developer.data.elexon.co.uk/>; machine-readable OpenAPI spec: <https://data.elexon.co.uk/swagger/v1/swagger.json>.
+- The portal says its APIs are public and need no API key.
+- Dataset endpoints expose source data and support retrieval using publication-time filters; stream endpoints return JSON and are described as having no result limits.
+- Official dataset endpoint paths are `/datasets/FUELHH/stream` (actuals) and `/datasets/WINDFOR/stream` (forecasts), served from the BMRS API.
+- FUELHH stream query parameters include `settlementDateFrom`, `settlementDateTo` (both `yyyy-MM-dd`), and repeated/list `fuelType`; actuals are filtered to `WIND`. Its JSON response is an array of records including `dataset`, `publishTime`, `startTime`, `settlementDate`, `settlementPeriod`, `fuelType`, and `generation`.
+- WINDFOR stream query parameters are `publishDateTimeFrom` and `publishDateTimeTo` (date-time). Its JSON response is an array of records including `dataset`, `publishTime`, `startTime`, and `generation`.
+- A live January 1 FUELHH request returned 48 half-hour rows. A live WINDFOR request returned hourly `startTime` points. Preserve the native resolutions during ingestion; any alignment belongs in analytics and must be explicit.
+- `FUELHH/stream` cannot combine settlement date filters with publish date filters, per the OpenAPI description. The stream operation has no pagination parameters or stated result limit in the spec.
+- Data is stored in UTC. Jan 2026 itself has no UK DST transition; dates outside that month must not be used to infer January half-hour counts.
+
+## Deployment direction
+
+Proposed for evaluation: Vercel static frontend with Python serverless API functions, since the assignment permits Vercel or Heroku and Vercel does not host the Docker development stack. Docker remains the local application environment. Confirm function routing and bundled data size during later phases.
+
+## Directory map
+
+| Path | Purpose |
+| --- | --- |
+| `backend/app/` | FastAPI application and API routes |
+| `backend/ingest/` | Elexon data ingestion scripts |
+| `backend/analytics/` | Forecast selection and accuracy calculations |
+| `backend/tests/` | Backend tests |
+| `frontend/` | React application |
+| `data/` | Processed, committed January 2026 data |
+| `docs/` | Assignment, project memory, design, and progress records |
+| `docker-compose.yml` | Local full-stack startup |
+
+## Source of truth note
+
+The supplied prompt includes detailed domain, analytics, screen, visual-design, and workflow requirements beyond the official PDF. The PDF remains authoritative where they conflict. To respect its explicit scope, implementation will first cover its two user needs and listed deliverables; additional detailed behavior from the prompt is treated as proposed direction pending scope review.
