@@ -23,11 +23,24 @@ Build a first-version React frontend and Python backend for a UK utility’s day
 
 Proposed for evaluation: Vercel static frontend with Python serverless API functions, since the assignment permits Vercel or Heroku and Vercel does not host the Docker development stack. Docker remains the local application environment. Confirm function routing and bundled data size during later phases.
 
+## API notes
+
+- FastAPI application: `backend/app/main.py`; Vercel serverless import: `api/index.py`.
+- Root `requirements.txt` delegates to `backend/requirements.txt` so Vercel installs the Python runtime dependencies.
+- Vercel’s [Python runtime documentation](https://vercel.com/docs/functions/runtimes/python) recognizes an `app` ASGI application under `api/`; it currently labels the runtime Beta. P7 must verify routing and that the JSON data files are bundled.
+- `GET /api/meta` reports scope, units, resolutions, and source quality.
+- `GET /api/decision?date=YYYY-MM-DD&cutoff=HH:MM` returns one January delivery day; cutoff is local Europe/London on D-1, default 09:00.
+- Accuracy routes: `/api/accuracy/summary`, `/by-horizon`, `/by-hour`, `/by-wind-level`, and `/distribution`; each supports the same optional cutoff.
+- API requests use the committed January JSON files only. Reports are cached in-process by cutoff; successful responses advertise a five-minute public cache.
+- CORS allows only origins listed in `CORS_ORIGINS`; defaults are the Vite localhost origins. `GRIDBRICKS_DATA_DIR` can override the committed data folder.
+- Errors share the shape `{ "error": { "code", "message", "details?" } }`. OpenAPI JSON and Swagger UI are available under `/api/openapi.json` and `/api/docs`.
+
 ## Directory map
 
 | Path | Purpose |
 | --- | --- |
 | `backend/app/` | FastAPI application and API routes |
+| `api/` | Vercel Python serverless entry point |
 | `backend/ingest/` | Elexon data ingestion scripts |
 | `backend/analytics/` | Forecast selection and accuracy calculations |
 | `backend/tests/` | Backend tests |
